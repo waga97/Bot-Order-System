@@ -16,9 +16,9 @@ This project simulates an automated order control system with support for:
 
 | Component             | Responsibility                                                                               |
 | --------------------- | -------------------------------------------------------------------------------------------- |
-| `OrderService.ts`     | Handles order lifecycle: creation, VIP queue logic, processing routing, rollback, completion |
-| `BotService.ts`       | Manages bot lifecycle: add/remove bots, track idle/active state                              |
-| `SimulationEngine.ts` | Controls per-bot countdown processing with full timer tracking & cancellation                |
+| `orderService.ts`     | Handles order lifecycle: creation, VIP queue logic, processing routing, rollback, completion |
+| `botService.ts`       | Manages bot lifecycle: add/remove bots, track idle/active state                              |
+| `simulationEngine.ts` | Controls per-bot countdown processing with full timer tracking & cancellation                |
 | `main.vue`            | UI layer — delegates all logic to services for clean separation                              |
 
 ---
