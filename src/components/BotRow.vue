@@ -6,9 +6,7 @@ defineProps<{ bot: Bot }>();
 
 <template>
   <tr class="bg-background-light border-b">
-    <td class="px-6 py-4 font-medium">
-      {{ bot.id }}
-    </td>
+    <td class="px-6 py-4 font-medium">{{ bot.id }}</td>
     <td class="px-6 py-4">
       <span
         :class="['px-3 py-1 text-xs font-medium rounded-full', bot.colorClass]"
@@ -16,7 +14,7 @@ defineProps<{ bot: Bot }>();
       >
     </td>
     <td class="px-6 py-4 font-medium">
-      {{ bot.order ?? "-" }}
+      {{ bot.order ? `#${bot.order}` : "-" }}
     </td>
     <td class="px-6 py-4">
       {{ bot.timeLeft !== null ? `${bot.timeLeft}s` : "-" }}

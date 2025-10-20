@@ -61,7 +61,7 @@ export class BotService {
    */
   assignOrderToBot(bot: Bot, order: Order) {
     bot.status = "Processing";
-    bot.order = `#${order.id}`;
+    bot.order = `${order.id}`;
     bot.timeLeft = 10;
     bot.colorClass = "bg-blue-100 text-blue-800";
   }

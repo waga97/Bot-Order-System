@@ -121,7 +121,7 @@ export class OrderService {
   // 2. Remove it from processing
   // 3. Reinsert it into the pending queue using VIP rules
   rollbackBotOrder(bot: Bot) {
-    const orderId = bot.order?.replace("#", "");
+    const orderId = bot.order;
     if (!orderId) return;
 
     const idx = this.processing.value.findIndex((o) => o.id === orderId);
