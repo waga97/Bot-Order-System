@@ -4,7 +4,11 @@ import BotTable from "@/components/BotTable.vue";
 import ActionButton from "@/components/ActionButton.vue";
 import OrderSection from "@/components/OrderSection.vue";
 import { BotService, type Bot } from "@/services/botService";
-import { OrderService, type Order } from "@/services/orderService";
+import {
+  OrderService,
+  type Order,
+  type OrderPriority,
+} from "@/services/orderService";
 import { SimulationEngine } from "@/services/simulationEngine";
 
 const pendingOrders = ref<Order[]>([]);
@@ -24,7 +28,7 @@ const orderService = new OrderService(
 
 const activeBots = computed(() => bots.value.length);
 
-const addOrder = (isVip = false) => orderService.addOrder(isVip);
+const addOrder = (priority: OrderPriority) => orderService.addOrder(priority);
 
 const addBot = () => {
   botService.addBot();
@@ -53,12 +57,12 @@ const removeBot = () => {
         <ActionButton
           color="primary"
           label="&plus; Normal Order"
-          @click="addOrder()"
+          @click="addOrder('Normal')"
         />
         <ActionButton
           color="secondary"
           label="&plus; VIP Order"
-          @click="addOrder(true)"
+          @click="addOrder('VIP')"
         />
       </div>
     </div>

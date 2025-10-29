@@ -11,12 +11,14 @@ import type { Ref } from "vue";
 import { BotService, type Bot } from "./botService";
 import { SimulationEngine } from "./simulationEngine";
 
+export type OrderPriority = "VIP" | "Normal";
+
 export interface Order {
   id: string;
   status: "Pending" | "Processing" | "Completed";
   labelClass: string;
   bot?: string;
-  isVip?: boolean;
+  priority: OrderPriority;
 }
 
 export class OrderService {
@@ -42,16 +44,15 @@ export class OrderService {
     return this.completed.value;
   }
 
-  // Add Order (Normal or VIP)
-  addOrder(isVip = false) {
+  addOrder(priority: OrderPriority = "Normal") {
     const newOrder: Order = {
       id: String(this.counter++),
       status: "Pending",
       labelClass: "bg-yellow-100 text-yellow-800",
-      isVip,
+      priority,
     };
 
-    this.insertOrderWithVipRules(this.pending.value, newOrder);
+    this.insertOrderWithPriority(this.pending.value, newOrder);
     this.assignOrders(); // Assign immediately if bots are available
   }
 
@@ -102,19 +103,29 @@ export class OrderService {
     this.assignOrders();
   }
 
-  // Insert orders respecting VIP grouping rules
-  private insertOrderWithVipRules(queue: Order[], order: Order) {
-    if (order.isVip) {
-      // Insert after last VIP
-      let insertAt = 0;
-      while (insertAt < queue.length && queue[insertAt]?.isVip === true) {
-        insertAt++;
+  /**
+   * Inserts a new order into the queue respecting multi tier priority rules.
+   * Order of precedence: VIP > NORMAL
+   * Within the same tier, preserve FIFO order.
+   */
+  private insertOrderWithPriority(queue: Order[], order: Order) {
+    const priorityRank = { VIP: 2, Normal: 1 } as const;
+    let insertAt = queue.length;
+
+    const newRank = priorityRank[order.priority];
+
+    for (let i = 0; i < queue.length; i++) {
+      const existing = queue[i];
+      if (!existing) continue;
+
+      const existingRank = priorityRank[existing.priority];
+      if (newRank > existingRank) {
+        insertAt = i;
+        break;
       }
-      queue.splice(insertAt, 0, order);
-    } else {
-      // Normal orders always go to the end
-      queue.push(order);
     }
+
+    queue.splice(insertAt, 0, order);
   }
 
   // 1. Find the order that the bot was processing
@@ -134,9 +145,9 @@ export class OrderService {
       id: removed.id,
       status: "Pending",
       labelClass: "bg-yellow-100 text-yellow-800",
-      isVip: removed.isVip,
+      priority: removed.priority,
     };
 
-    this.insertOrderWithVipRules(this.pending.value, returned);
+    this.insertOrderWithPriority(this.pending.value, returned);
   }
 }

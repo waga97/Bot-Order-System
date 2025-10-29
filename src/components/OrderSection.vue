@@ -14,20 +14,24 @@ defineProps<{
       <div
         v-for="order in orders"
         :key="order.id"
-        class="p-4 rounded-lg flex items-center justify-between"
-        :class="[
-          'bg-gray-100 border border-gray-200',
-          order.isVip ? 'bg-blue-50 border-blue-200' : '',
-        ]"
+        class="p-4 rounded-lg flex items-center justify-between bg-gray-50 border border-gray-200"
       >
         <!-- Left side -->
         <div class="flex items-center gap-2">
+          <!-- Order ID -->
           <span class="font-medium">#{{ order.id }}</span>
+
+          <!-- Priority badge -->
           <span
-            v-if="order.isVip"
-            class="text-xs font-semibold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full"
+            v-if="order.priority"
+            :class="[
+              'text-xs font-semibold px-2 py-0.5 rounded-full capitalize',
+              order.priority === 'VIP'
+                ? 'text-orange-700 bg-orange-100'
+                : 'text-gray-700 bg-gray-100',
+            ]"
           >
-            &#9733;
+            {{ order.priority }}
           </span>
         </div>
 
@@ -43,6 +47,7 @@ defineProps<{
           </span>
           <span class="text-sm font-medium">({{ order.bot }})</span>
         </div>
+
         <span
           v-else
           :class="[

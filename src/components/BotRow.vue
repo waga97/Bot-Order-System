@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Bot } from "@/services/botService";
 
-defineProps<{ bot: Bot }>();
+const props = defineProps<{ bot: Bot }>();
 </script>
 
 <template>
